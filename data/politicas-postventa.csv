@@ -1,0 +1,9 @@
+policyId,category,productType,referenceDateField,windowDays,delayGraceDays,warrantyMonths,requiresPackageClosed,requiresUnused,active,notes
+P001,PRODUCTO_DANADO,all,deliveryDate,7,,,False,False,True,
+P002,PRODUCTO_INCORRECTO,all,,,,,False,False,True,Comparar atributos reportados con los del pedido
+P003,PEDIDO_DEMORADO,all,estimatedDeliveryDate,,0,,False,False,True,
+P004,CAMBIO_DEVOLUCION,coffee,deliveryDate,30,,,True,False,True,El paquete debe permanecer cerrado
+P005,CAMBIO_DEVOLUCION,machine,deliveryDate,30,,,False,True,True,El producto no debe haber sido usado
+P006,CAMBIO_DEVOLUCION,accessory,deliveryDate,30,,,False,True,True,El producto no debe haber sido usado
+P007,GARANTIA,machine,orderDate,,,12,False,False,True,
+P008,GARANTIA,grinder,orderDate,,,12,False,False,True,

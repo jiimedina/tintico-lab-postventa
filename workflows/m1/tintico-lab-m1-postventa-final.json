@@ -1,0 +1,748 @@
+{
+  "name": "Tintico Lab — M1 — Postventa",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3c693f58-ca68-4e91-b162-9a7904aab1aa",
+              "name": "channel",
+              "value": "whatsapp",
+              "type": "string"
+            },
+            {
+              "id": "3c00266b-b7dc-4aaa-93fa-98c6edeb1d0b",
+              "name": "customerIdentifier",
+              "value": "+54XXXXXXXXXX",
+              "type": "string"
+            },
+            {
+              "id": "655116da-87c8-42d5-93b1-75f17dfb172f",
+              "name": "identifierType",
+              "value": "phone",
+              "type": "string"
+            },
+            {
+              "id": "b32ef1dd-aa2e-4db6-bc19-bb959437ed7c",
+              "name": "message",
+              "value": "El pedido TL-1003 todavía no llegó.",
+              "type": "string"
+            },
+            {
+              "id": "1d95ed7b-163c-462a-9ebe-47d8813fe505",
+              "name": "receivedAt",
+              "value": "2026-09-18T10:30:00",
+              "type": "string"
+            },
+            {
+              "id": "288110ee-89c1-4825-b1bb-495900b6f7ed",
+              "name": "currentDate",
+              "value": "2026-09-18",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "60c053c8-26f6-40a6-bcb2-62b13950449a",
+      "name": "Input de prueba",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -976,
+        -96
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "bc00d792-ec51-4a31-a5ba-419042a7b80f",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1136,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "7887cb40-0161-48cc-a4d4-042cd9ce6c4d",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1024,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Busca un pedido de Tintico Lab por su orderId.\n\nUsá esta herramienta cuando necesites consultar datos verificables de un pedido para resolver un reclamo de postventa.\n\nRequiere un orderId válido proporcionado por el cliente.\n\nNo uses esta herramienta para consultas FUERA_DE_ALCANCE ni cuando el cliente no haya proporcionado un orderId.",
+        "workflowId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_IMPORTED_WORKFLOW_ID",
+          "mode": "list",
+          "cachedResultName": "Tintico Lab — Tool — buscar_pedido"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "orderId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('orderId', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "orderId"
+          ],
+          "schema": [
+            {
+              "id": "orderId",
+              "displayName": "orderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "6fda344e-6dac-46b1-a76d-173fdcc07c35",
+      "name": "Call 'Tintico Lab — Tool — buscar_pedido'",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -880,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"category\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"PRODUCTO_DANADO\",\n        \"PRODUCTO_INCORRECTO\",\n        \"PEDIDO_DEMORADO\",\n        \"CAMBIO_DEVOLUCION\",\n        \"GARANTIA\",\n        \"FUERA_DE_ALCANCE\"\n      ]\n    },\n    \"orderId\": {\n      \"anyOf\": [\n        { \"type\": \"string\" },\n        { \"type\": \"null\" }\n      ]\n    },\n    \"reportedProduct\": {\n      \"anyOf\": [\n        { \"type\": \"string\" },\n        { \"type\": \"null\" }\n      ]\n    },\n    \"reportedAttributes\": {\n      \"type\": \"object\"\n    },\n    \"reportedCondition\": {\n      \"type\": \"object\"\n    },\n    \"missingData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"toolResult\": {\n      \"anyOf\": [\n        {\n          \"type\": \"object\",\n          \"properties\": {\n            \"found\": {\n              \"type\": \"boolean\"\n            },\n            \"order\": {\n              \"anyOf\": [\n                {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"orderId\": {\n                      \"type\": \"string\"\n                    },\n                    \"customerType\": {\n                      \"type\": \"string\"\n                    },\n                    \"status\": {\n                      \"type\": \"string\"\n                    },\n                    \"orderDate\": {\n                      \"type\": \"string\"\n                    },\n                    \"estimatedDeliveryDate\": {\n                      \"anyOf\": [\n                        { \"type\": \"string\" },\n                        { \"type\": \"null\" }\n                      ]\n                    },\n                    \"deliveryDate\": {\n                      \"anyOf\": [\n                        { \"type\": \"string\" },\n                        { \"type\": \"null\" }\n                      ]\n                    },\n                    \"items\": {\n                      \"type\": \"array\",\n                      \"items\": {\n                        \"type\": \"object\"\n                      }\n                    }\n                  },\n                  \"required\": [\n                    \"orderId\",\n                    \"customerType\",\n                    \"status\",\n                    \"orderDate\",\n                    \"estimatedDeliveryDate\",\n                    \"deliveryDate\",\n                    \"items\"\n                  ]\n                },\n                {\n                  \"type\": \"null\"\n                }\n              ]\n            }\n          },\n          \"required\": [\n            \"found\",\n            \"order\"\n          ]\n        },\n        {\n          \"type\": \"null\"\n        }\n      ]\n    }\n  },\n  \"required\": [\n    \"category\",\n    \"orderId\",\n    \"reportedProduct\",\n    \"reportedAttributes\",\n    \"reportedCondition\",\n    \"missingData\",\n    \"toolResult\"\n  ]\n}"
+      },
+      "id": "6bb33137-2379-45bc-8e45-c6ca5b2cdfda",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -736,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "20d0ae3c-0bd4-401c-8f80-f7922a6acec3",
+              "name": "caseCategory",
+              "value": "={{$json.output.category}}",
+              "type": "string"
+            },
+            {
+              "id": "72cec2ee-7338-4c25-8078-1b9f63fd0cde",
+              "name": "orderId",
+              "value": "={{$json.output.orderId}}",
+              "type": "string"
+            },
+            {
+              "id": "7fb26ecc-1bbe-403e-be2c-be7cf5827b23",
+              "name": "customerType",
+              "value": "={{$json.output.toolResult.order.customerType}}",
+              "type": "string"
+            },
+            {
+              "id": "e20ac8e5-7802-4953-8121-e985146e7666",
+              "name": "orderStatus",
+              "value": "={{$json.output.toolResult.order.status}}",
+              "type": "string"
+            },
+            {
+              "id": "c801fce3-25a8-4a36-bdb8-d24fad5230e3",
+              "name": "orderDate",
+              "value": "={{$json.output.toolResult.order.orderDate}}",
+              "type": "string"
+            },
+            {
+              "id": "c692641b-9bd5-4f00-bc9e-8378f1acbd1c",
+              "name": "estimatedDeliveryDate",
+              "value": "={{$json.output.toolResult.order.estimatedDeliveryDate}}",
+              "type": "string"
+            },
+            {
+              "id": "5e006247-b9c0-4b58-8315-a45e021f9f52",
+              "name": "deliveryDate",
+              "value": "={{$json.output.toolResult.order.deliveryDate}}",
+              "type": "string"
+            },
+            {
+              "id": "fca6dc7e-2b26-49b7-bd19-99c44cdfacb5",
+              "name": "productType",
+              "value": "={{$json.output.toolResult.order.items[0].productType}}",
+              "type": "string"
+            },
+            {
+              "id": "b3ac3db4-89e4-485d-9e71-3bd37d4bc6c5",
+              "name": "currentDate",
+              "value": "={{ $('Input de prueba').item.json.currentDate }}",
+              "type": "string"
+            },
+            {
+              "id": "566bff1c-003d-4607-8d40-b556a0b0c600",
+              "name": "policyId",
+              "value": "={{$json.policyId}}",
+              "type": "string"
+            },
+            {
+              "id": "06f7656d-0603-4ad9-87cf-3790ba840986",
+              "name": "policyProductType",
+              "value": "={{$json.productType}}",
+              "type": "string"
+            },
+            {
+              "id": "ab3a6733-7d1c-420f-bca3-a3655800ecdb",
+              "name": "referenceDateField",
+              "value": "={{$json.referenceDateField}}",
+              "type": "string"
+            },
+            {
+              "id": "74b2fcc7-7813-4983-b5d4-8903b8ef90f9",
+              "name": "windowDays",
+              "value": "={{ $json.windowDays }}",
+              "type": "number"
+            },
+            {
+              "id": "6a9cb4cb-aabb-46ec-baa8-ea1597bc475b",
+              "name": "delayGraceDays",
+              "value": "={{ $json.delayGraceDays }}",
+              "type": "number"
+            },
+            {
+              "id": "11ceb117-6bb3-4bc1-a9d3-83644bde95c1",
+              "name": "warrantyMonths",
+              "value": "={{ $json.warrantyMonths }}",
+              "type": "number"
+            },
+            {
+              "id": "c6c092ed-ecf5-45c6-a6d6-5d0f17a4c477",
+              "name": "requiresPackageClosed",
+              "value": "={{$json.requiresPackageClosed}}",
+              "type": "boolean"
+            },
+            {
+              "id": "a41c1ddf-0d68-4965-b64e-61ca674d066e",
+              "name": "requiresUnused",
+              "value": "={{$json.requiresUnused}}",
+              "type": "boolean"
+            },
+            {
+              "id": "80058087-ea2a-4c57-8eeb-5b1dee2acfe4",
+              "name": "reportedProduct",
+              "value": "={{$json.output.reportedProduct}}",
+              "type": "string"
+            },
+            {
+              "id": "7066a8f8-ad65-4a8a-938f-ac3fec5cc6ca",
+              "name": "reportedAttributes",
+              "value": "={{$json.output.reportedAttributes}}",
+              "type": "object"
+            },
+            {
+              "id": "87688546-eb2f-4ed8-81b7-881d9a4d2784",
+              "name": "reportedCondition",
+              "value": "={{$json.output.reportedCondition}}",
+              "type": "object"
+            },
+            {
+              "id": "412eea42-da66-46a6-833d-1bca44e7862e",
+              "name": "missingData",
+              "value": "={{$json.output.missingData}}",
+              "type": "array"
+            },
+            {
+              "id": "a775ed04-752e-41d5-88be-f7c39d7a14f2",
+              "name": "orderItem",
+              "value": "={{$json.output.toolResult.order.items[0]}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc12383b-6e14-4ae6-bc89-c863f279e913",
+      "name": "Consolidar contexto",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        528,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\n\nlet decision = null;\nlet reason = null;\n\nswitch (data.caseCategory) {\n\n  case \"PEDIDO_DEMORADO\": {\n    const currentDate = new Date(data.currentDate);\n    const estimatedDate = new Date(data.estimatedDeliveryDate);\n\n    const graceDays = Number(data.delayGraceDays || 0);\n\n    const limitDate = new Date(estimatedDate);\n    limitDate.setDate(limitDate.getDate() + graceDays);\n\n    if (currentDate > limitDate) {\n      decision = \"ESCALAR\";\n      reason = \"El pedido superó la fecha estimada de entrega.\";\n    } else {\n      decision = \"RESUELTO\";\n      reason = \"El pedido todavía se encuentra dentro del plazo estimado de entrega.\";\n    }\n\n    break;\n  }\n\n  case \"PRODUCTO_DANADO\": {\n    const currentDate = new Date(data.currentDate);\n    const deliveryDate = new Date(data.deliveryDate);\n\n    const windowDays = Number(data.windowDays || 0);\n\n    const limitDate = new Date(deliveryDate);\n    limitDate.setDate(limitDate.getDate() + windowDays);\n\n    if (currentDate <= limitDate) {\n      decision = \"RESUELTO\";\n      reason = \"El reclamo por producto dañado se encuentra dentro del plazo permitido.\";\n    } else {\n      decision = \"ESCALAR\";\n      reason = \"El reclamo por producto dañado fue realizado fuera del plazo permitido.\";\n    }\n\n    break;\n  }\ncase \"GARANTIA\": {\n  const currentDate = new Date(data.currentDate);\n  const orderDate = new Date(data.orderDate);\n\n  const warrantyMonths = Number(data.warrantyMonths || 0);\n\n  const limitDate = new Date(orderDate);\n  limitDate.setMonth(limitDate.getMonth() + warrantyMonths);\n\n  if (currentDate <= limitDate) {\n    decision = \"ESCALAR\";\n    reason = \"El producto se encuentra dentro del período de garantía y requiere revisión humana.\";\n  } else {\n    decision = \"FUERA_DE_POLITICA\";\n    reason = \"El período de garantía ya venció.\";\n  }\n\n  break;\n}\n\ncase \"CAMBIO_DEVOLUCION\": {\n  const currentDate = new Date(data.currentDate);\n  const deliveryDate = new Date(data.deliveryDate);\n\n  const windowDays = Number(data.windowDays || 0);\n\n  const limitDate = new Date(deliveryDate);\n  limitDate.setDate(limitDate.getDate() + windowDays);\n\n  // 1. Primero validamos el plazo\n  if (currentDate > limitDate) {\n    decision = \"FUERA_DE_POLITICA\";\n    reason = \"La solicitud de cambio o devolución fue realizada fuera del plazo permitido.\";\n    break;\n  }\n\n  // 2. Si la política exige paquete cerrado\n  if (data.requiresPackageClosed === true) {\n    const packageOpened = data.reportedCondition?.packageOpened;\n\n    if (packageOpened === null || packageOpened === undefined) {\n      decision = \"FALTA_UN_DATO\";\n      reason = \"Falta saber si el paquete fue abierto para aplicar la política de devolución.\";\n\n      if (!data.missingData.includes(\"packageOpened\")) {\n        data.missingData.push(\"packageOpened\");\n      }\n\n      break;\n    }\n\n    if (packageOpened === true) {\n      decision = \"FUERA_DE_POLITICA\";\n      reason = \"La política de devolución exige que el paquete permanezca cerrado.\";\n      break;\n    }\n\n    decision = \"RESUELTO\";\n    reason = \"La solicitud se encuentra dentro del plazo y el paquete permanece cerrado.\";\n    break;\n  }\n\n  // 3. Si la política exige producto sin uso\n  if (data.requiresUnused === true) {\n    const productUsed = data.reportedCondition?.productUsed;\n\n    if (productUsed === null || productUsed === undefined) {\n      decision = \"FALTA_UN_DATO\";\n      reason = \"Falta saber si el producto fue usado para aplicar la política de devolución.\";\n\n      if (!data.missingData.includes(\"productUsed\")) {\n        data.missingData.push(\"productUsed\");\n      }\n\n      break;\n    }\n\n    if (productUsed === true) {\n      decision = \"FUERA_DE_POLITICA\";\n      reason = \"La política de devolución exige que el producto no haya sido utilizado.\";\n      break;\n    }\n\n    decision = \"RESUELTO\";\n    reason = \"La solicitud se encuentra dentro del plazo y el producto no fue utilizado.\";\n    break;\n  }\n\n  // 4. Política sin condición adicional\n  decision = \"RESUELTO\";\n  reason = \"La solicitud se encuentra dentro del plazo permitido.\";\n\n  break;\n}\n\ncase \"PRODUCTO_INCORRECTO\": {\n  const expected = data.orderItem || {};\n  const reported = data.reportedAttributes || {};\n\n  const comparableAttributes = [\n    \"origin\",\n    \"size\",\n    \"format\",\n    \"grind\"\n  ];\n\n  const comparedAttributes = [];\n  const mismatches = [];\n\n  // Normalizamos strings para evitar diferencias irrelevantes\n  const normalize = (value) => {\n    if (value === null || value === undefined) {\n      return null;\n    }\n\n    if (typeof value === \"string\") {\n      return value.trim().toLowerCase();\n    }\n\n    return value;\n  };\n\n  for (const attribute of comparableAttributes) {\n    // Solo comparamos atributos que el cliente realmente reportó\n    if (\n      Object.prototype.hasOwnProperty.call(reported, attribute) &&\n      reported[attribute] !== undefined\n    ) {\n      const expectedValue = normalize(expected[attribute]);\n      const reportedValue = normalize(reported[attribute]);\n\n      comparedAttributes.push(attribute);\n\n      if (expectedValue !== reportedValue) {\n        mismatches.push(attribute);\n      }\n    }\n  }\n\n  // No hay información suficiente para comparar\n  if (comparedAttributes.length === 0) {\n    decision = \"ESCALAR\";\n    reason = \"No fue posible validar el producto recibido contra los atributos registrados en el pedido.\";\n    break;\n  }\n\n  // Se confirmó al menos una diferencia\n  if (mismatches.length > 0) {\n    decision = \"RESUELTO\";\n    reason = `Se confirmó una diferencia entre el pedido y el producto reportado en: ${mismatches.join(\", \")}.`;\n    break;\n  }\n\n  // Los atributos reportados coinciden\n  decision = \"RESUELTO\";\n  reason = \"Los atributos reportados coinciden con los registrados en el pedido.\";\n\n  break;\n}\n    \n  default:\n    throw new Error(\n      `La categoría ${data.caseCategory} todavía no está implementada en el motor de políticas.`\n    );\n}\n\n// requiresHuman se deriva de decision\nconst requiresHuman = decision === \"ESCALAR\";\n\n// prioridad\nlet priority = \"NORMAL\";\n\nif (\n  decision === \"ESCALAR\" &&\n  data.customerType === \"B2B\" &&\n  data.productType === \"machine\"\n) {\n  priority = \"HIGH\";\n}\n\nreturn [\n  {\n    json: {\n      ...data,\n      decision,\n      priority,\n      requiresHuman,\n      reason\n    }\n  }\n];"
+      },
+      "id": "b1cf96bd-55b3-4c9b-8c14-2d268f030dab",
+      "name": "Aplicar políticas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.output;\n\nlet preliminaryDecision = null;\nlet preliminaryReason = null;\nlet needsPolicy = true;\n\n// 1. FUERA_DE_ALCANCE\nif (data.category === \"FUERA_DE_ALCANCE\") {\n  preliminaryDecision = \"RESUELTO\";\n  preliminaryReason = \"La consulta está fuera del alcance de postventa.\";\n  needsPolicy = false;\n}\n\n// 2. Falta orderId\nelse if (!data.orderId) {\n  preliminaryDecision = \"FALTA_UN_DATO\";\n  preliminaryReason = \"Falta orderId para consultar el pedido.\";\n  needsPolicy = false;\n}\n\n// 3. Tool ejecutada pero pedido no encontrado\nelse if (\n  data.toolResult &&\n  data.toolResult.found === false\n) {\n  preliminaryDecision = \"ESCALAR\";\n  preliminaryReason = \"El orderId fue proporcionado pero el pedido no fue encontrado.\";\n  needsPolicy = false;\n}\n\n// 4. Caso válido para seguir a políticas\nelse {\n  needsPolicy = true;\n}\n\nreturn [\n  {\n    json: {\n      ...$json,\n      preliminaryDecision,\n      preliminaryReason,\n      needsPolicy\n    }\n  }\n];"
+      },
+      "id": "67fb4449-c128-4d0c-9408-c9f51062a91c",
+      "name": "Evaluar estado inicial",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -528,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "653fbf22-bcc0-47de-bd6c-882caea54c6b",
+              "name": "caseCategory",
+              "value": "={{$json.output.category}}",
+              "type": "string"
+            },
+            {
+              "id": "63915a2b-763f-4d44-b901-324c6c3d7dba",
+              "name": "orderId",
+              "value": "={{$json.output.orderId}}",
+              "type": "string"
+            },
+            {
+              "id": "3420ef7f-1d1d-4046-ae4e-1ffab75d85ea",
+              "name": "reportedProduct",
+              "value": "={{$json.output.reportedProduct}}",
+              "type": "string"
+            },
+            {
+              "id": "3d082cc0-c514-4631-9d3e-da31a4ad4388",
+              "name": "reportedAttributes",
+              "value": "={{$json.output.reportedAttributes}}",
+              "type": "object"
+            },
+            {
+              "id": "0797a455-9ced-43ca-9cd2-c070b577d89d",
+              "name": "reportedCondition",
+              "value": "={{$json.output.reportedCondition}}",
+              "type": "object"
+            },
+            {
+              "id": "a8543d08-50c2-49c7-879d-be6d863af0f3",
+              "name": "missingData",
+              "value": "={{$json.output.missingData}}",
+              "type": "array"
+            },
+            {
+              "id": "04bf375b-d4d3-413c-97aa-f89890ecfe5a",
+              "name": "decision",
+              "value": "={{$json.preliminaryDecision}}",
+              "type": "string"
+            },
+            {
+              "id": "c2d9c63c-5377-4c54-a864-620ad1c9a50b",
+              "name": "reason",
+              "value": "={{$json.preliminaryReason}}",
+              "type": "string"
+            },
+            {
+              "id": "5e00c302-91d1-47b2-96eb-77cb9e973628",
+              "name": "requiresHuman",
+              "value": "={{ $json.preliminaryDecision === 'ESCALAR' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "4c39c1b9-982a-4e02-b9b1-4209dc12056f",
+              "name": "priority",
+              "value": "NORMAL",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -128,
+        320
+      ],
+      "id": "72dd18e6-1150-4486-9007-3514106c9f54",
+      "name": "Resolver sin política"
+    },
+    {
+      "parameters": {
+        "jsCode": "const policies = $input.all().map(item => item.json);\n\n// Obtenemos el caso que ya fue validado antes del IF\nconst caseData = $('Evaluar estado inicial').first().json;\n\n// Tomamos el productType real desde el pedido\nconst productType =\n  caseData.output.toolResult?.order?.items?.[0]?.productType ?? null;\n\n// 1. Buscar política específica para el tipo de producto\nlet selectedPolicy = policies.find(\n  policy =>\n    policy.productType === productType &&\n    policy.active === true\n);\n\n// 2. Si no existe una específica, buscar la política genérica \"all\"\nif (!selectedPolicy) {\n  selectedPolicy = policies.find(\n    policy =>\n      policy.productType === 'all' &&\n      policy.active === true\n  );\n}\n\n// 3. Si no existe ninguna política válida, detenemos la ejecución\nif (!selectedPolicy) {\n  throw new Error(\n    `No se encontró una política activa para category=${caseData.output.category} y productType=${productType}`\n  );\n}\n\nreturn [\n  {\n    json: selectedPolicy\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        176
+      ],
+      "id": "c51a0450-9451-4c7d-990a-e5ff9432985a",
+      "name": "Seleccionar política"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "98661357-10b3-4f17-b19b-7724768a0268",
+              "name": "category",
+              "value": "={{ $json.caseCategory }}",
+              "type": "string"
+            },
+            {
+              "id": "fc126828-c520-43f7-ba16-9f39f9c27f52",
+              "name": "orderId",
+              "value": "={{ $json.orderId }}",
+              "type": "string"
+            },
+            {
+              "id": "79069644-5102-474e-874c-c014d7921eab",
+              "name": "decision",
+              "value": "={{ $json.decision }}",
+              "type": "string"
+            },
+            {
+              "id": "16c3f967-1cb4-4d84-8129-999330e2ea82",
+              "name": "priority",
+              "value": "={{ $json.priority }}",
+              "type": "string"
+            },
+            {
+              "id": "7fdef71a-28e3-4532-9ce0-4e4e9a5ee02c",
+              "name": "requiresHuman",
+              "value": "={{ $json.requiresHuman }}",
+              "type": "boolean"
+            },
+            {
+              "id": "85d45786-4e46-41c5-856e-57b3503ac9fd",
+              "name": "missingData",
+              "value": "={{ $json.missingData }}",
+              "type": "array"
+            },
+            {
+              "id": "f773f0e7-99e5-4371-9974-5dd89c637538",
+              "name": "reason",
+              "value": "={{ $json.reason }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        960,
+        320
+      ],
+      "id": "72afedec-9fa8-4940-bc72-95b124dad035",
+      "name": "Salida final M1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Sos el agente de postventa de Tintico Lab.\n\nTu responsabilidad es interpretar el mensaje del cliente y clasificarlo en una de estas categorías:\n\n- PRODUCTO_DANADO\n- PRODUCTO_INCORRECTO\n- PEDIDO_DEMORADO\n- CAMBIO_DEVOLUCION\n- GARANTIA\n- FUERA_DE_ALCANCE\n\nTambién debés extraer, cuando estén presentes:\n- orderId\n- producto mencionado\n- atributos reportados del producto\n- condiciones declaradas por el cliente, como packageOpened o productUsed\n\nLas categorías PRODUCTO_DANADO, PRODUCTO_INCORRECTO, PEDIDO_DEMORADO, CAMBIO_DEVOLUCION y GARANTIA requieren consultar el pedido.\n\nFUERA_DE_ALCANCE no requiere consultar el pedido.\n\nSi la categoría requiere pedido pero el cliente no proporcionó orderId, no intentes llamar ninguna herramienta. Indicá que falta orderId.\n\nNo inventes datos que el cliente no haya proporcionado.\n\nreportedProduct, reportedAttributes y reportedCondition deben contener únicamente información expresada o inferida directamente del mensaje del cliente.\n\nNo copies en reportedProduct, reportedAttributes ni reportedCondition datos obtenidos mediante buscar_pedido.\n\nLos datos provenientes de buscar_pedido deben permanecer únicamente dentro de toolResult.\n\nEn PRODUCTO_INCORRECTO, reportedAttributes debe describir los atributos que el cliente afirma haber recibido, no los atributos esperados del pedido.\n\nPara atributos de café, normalizá los valores reportados usando estas convenciones:\n\n- format = \"whole_beans\" cuando el cliente indique café en grano.\n- format = \"ground\" cuando indique café molido.\n- grind = \"espresso\" cuando indique molienda para espresso.\n- grind = \"v60\" cuando indique molienda para V60.\n- grind = \"french_press\" cuando indique molienda para prensa francesa.\n- grind = null cuando el café esté en grano o no se haya informado una molienda.\n\nSi el cliente dice que recibió café molido para una preparación específica, incluí tanto format = \"ground\" como el valor correspondiente de grind.\n\nEl campo missingData debe contener únicamente datos obligatorios según las reglas explícitas de este workflow.\n\nNo inventes requisitos, evidencias ni documentación adicional.\n\nNo solicites fotos, videos, comprobantes, números de serie ni otros datos salvo que las instrucciones indiquen explícitamente que son obligatorios.\n\nPara las categorías que requieren pedido, orderId es obligatorio.\n\nSi el cliente proporcionó orderId y la herramienta encontró el pedido correctamente, no agregues orderId a missingData.\n\nSi no falta ningún dato obligatorio según estas reglas, missingData debe ser [].\n\nNo tomes decisiones comerciales finales ni calcules priority o requiresHuman. Esas decisiones serán aplicadas después por lógica determinística.\n\nTu salida debe respetar exactamente el formato estructurado definido por el Output Parser.\n\nNo respondas con explicaciones, listas, Markdown ni texto adicional fuera de la estructura requerida.\n\nNo calcules decision, priority ni requiresHuman.\n\nSi no hay un valor disponible, usá null, un objeto vacío o un array vacío según corresponda.\n\nSi usás la herramienta buscar_pedido, incluí su resultado en toolResult.\n\nSi no necesitás usar la herramienta, toolResult debe ser null."
+        }
+      },
+      "id": "8987e3de-c32d-42a2-a391-3b9a2d6414b5",
+      "name": "Agente de posventa",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -832,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7b0a54d2-75ca-43ee-85d5-1d70fc3b6af9",
+              "leftValue": "={{$json.needsPolicy}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2b93e007-756e-4d59-8298-ed67d2684d96",
+      "name": "¿Necesita política?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -336,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "da915515-9dc6-4362-93df-cfb19b8f474b",
+      "name": "Merge caso + política",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        336,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Tintico Lab — Políticas de Postventa"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 80230892,
+          "mode": "list",
+          "cachedResultName": "politicas_postventa"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "category",
+              "lookupValue": "={{ $json.output.category }}"
+            },
+            {
+              "lookupColumn": "active",
+              "lookupValue": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "adb02eb2-4332-46aa-b0cc-33e745e63828",
+      "name": "Buscar políticas activas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -32,
+        176
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Input de prueba": {
+      "main": [
+        [
+          {
+            "node": "Agente de posventa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Input de prueba",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de posventa",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Tintico Lab — Tool — buscar_pedido'": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente de posventa",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agente de posventa",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consolidar contexto": {
+      "main": [
+        [
+          {
+            "node": "Aplicar políticas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar estado inicial": {
+      "main": [
+        [
+          {
+            "node": "¿Necesita política?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seleccionar política": {
+      "main": [
+        [
+          {
+            "node": "Merge caso + política",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Aplicar políticas": {
+      "main": [
+        [
+          {
+            "node": "Salida final M1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolver sin política": {
+      "main": [
+        [
+          {
+            "node": "Salida final M1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de posventa": {
+      "main": [
+        [
+          {
+            "node": "Evaluar estado inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Necesita política?": {
+      "main": [
+        [
+          {
+            "node": "Buscar políticas activas",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge caso + política",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resolver sin política",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge caso + política": {
+      "main": [
+        [
+          {
+            "node": "Consolidar contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar políticas activas": {
+      "main": [
+        [
+          {
+            "node": "Seleccionar política",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}

@@ -1,0 +1,85 @@
+{
+  "TL-1001": {
+    "orderId": "TL-1001",
+    "customerType": "B2C",
+    "status": "delivered",
+    "orderDate": "2026-09-10",
+    "estimatedDeliveryDate": "2026-09-14",
+    "deliveryDate": "2026-09-14",
+    "items": [
+      {
+        "sku": "CAF-HUI-500-G",
+        "name": "Café Huila 500g",
+        "productType": "coffee",
+        "origin": "huila",
+        "size": "500g",
+        "format": "whole_beans",
+        "grind": null
+      }
+    ]
+  },
+  "TL-1002": {
+    "orderId": "TL-1002",
+    "customerType": "B2C",
+    "status": "delivered",
+    "orderDate": "2026-05-10",
+    "estimatedDeliveryDate": "2026-05-14",
+    "deliveryDate": "2026-05-14",
+    "items": [
+      {
+        "sku": "MCH-HOME-MINI",
+        "name": "Tintico Home Mini",
+        "productType": "machine"
+      }
+    ]
+  },
+  "TL-1003": {
+    "orderId": "TL-1003",
+    "customerType": "B2B",
+    "status": "in_transit",
+    "orderDate": "2026-09-10",
+    "estimatedDeliveryDate": "2026-09-17",
+    "deliveryDate": null,
+    "items": [
+      {
+        "sku": "MCH-BARISTA-ONE",
+        "name": "Barista One",
+        "productType": "machine"
+      }
+    ]
+  },
+  "TL-1004": {
+    "orderId": "TL-1004",
+    "customerType": "B2C",
+    "status": "delivered",
+    "orderDate": "2026-09-12",
+    "estimatedDeliveryDate": "2026-09-13",
+    "deliveryDate": "2026-09-13",
+    "items": [
+      {
+        "sku": "CAF-NAR-500-G",
+        "name": "Café Nariño 500g",
+        "productType": "coffee",
+        "origin": "nariño",
+        "size": "500g",
+        "format": "whole_beans",
+        "grind": null
+      }
+    ]
+  },
+  "TL-1005": {
+    "orderId": "TL-1005",
+    "customerType": "B2C",
+    "status": "delivered",
+    "orderDate": "2026-09-12",
+    "estimatedDeliveryDate": "2026-09-14",
+    "deliveryDate": "2026-09-14",
+    "items": [
+      {
+        "sku": "MCH-HOME-PLUS",
+        "name": "Tintico Home Plus",
+        "productType": "machine"
+      }
+    ]
+  }
+}

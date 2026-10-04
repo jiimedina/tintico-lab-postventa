@@ -1,0 +1,58 @@
+{
+  "name": "Tintico Lab — Tool — buscar_pedido",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "orderId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "61912bd5-773c-4d0c-8491-1196fdf7d129",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const orderId = $json.orderId;\n\nconst orders = {\n  \"TL-1001\": {\n    orderId: \"TL-1001\",\n    customerType: \"B2C\",\n    status: \"delivered\",\n    orderDate: \"2026-09-10\",\n    estimatedDeliveryDate: \"2026-09-14\",\n    deliveryDate: \"2026-09-14\",\n    items: [\n      {\n        sku: \"CAF-HUI-500-G\",\n        name: \"Café Huila\",\n        productType: \"coffee\",\n        origin: \"Huila\",\n        size: \"500g\",\n        format: \"whole_beans\",\n        grind: null\n      }\n    ]\n  },\n\n  \"TL-1002\": {\n    orderId: \"TL-1002\",\n    customerType: \"B2C\",\n    status: \"delivered\",\n    orderDate: \"2026-05-10\",\n    estimatedDeliveryDate: \"2026-05-14\",\n    deliveryDate: \"2026-05-14\",\n    items: [\n      {\n        sku: \"MCH-HOME-MINI\",\n        name: \"Tintico Home Mini\",\n        productType: \"machine\"\n      }\n    ]\n  },\n\n  \"TL-1003\": {\n    orderId: \"TL-1003\",\n    customerType: \"B2B\",\n    status: \"in_transit\",\n    orderDate: \"2026-09-10\",\n    estimatedDeliveryDate: \"2026-09-17\",\n    deliveryDate: null,\n    items: [\n      {\n        sku: \"MCH-BARISTA-ONE\",\n        name: \"Barista One\",\n        productType: \"machine\"\n      }\n    ]\n  },\n\n  \"TL-1005\": {\n  orderId: \"TL-1005\",\n  customerType: \"B2C\",\n  status: \"delivered\",\n  orderDate: \"2026-09-12\",\n  estimatedDeliveryDate: \"2026-09-14\",\n  deliveryDate: \"2026-09-14\",\n  items: [\n    {\n      sku: \"MCH-HOME-PLUS\",\n      name: \"Tintico Home Plus\",\n      productType: \"machine\"\n    }\n  ]\n},\n\n  \"TL-1004\": {\n    orderId: \"TL-1004\",\n    customerType: \"B2C\",\n    status: \"delivered\",\n    orderDate: \"2026-09-12\",\n    estimatedDeliveryDate: \"2026-09-13\",\n    deliveryDate: \"2026-09-13\",\n    items: [\n      {\n        sku: \"CAF-NAR-500-G\",\n        name: \"Café Nariño\",\n        productType: \"coffee\",\n        origin: \"Nariño\",\n        size: \"500g\",\n        format: \"whole_beans\",\n        grind: null\n      }\n    ]\n  }\n};\n\nconst order = orders[orderId];\n\nif (!order) {\n  return [\n    {\n      json: {\n        found: false,\n        order: null\n      }\n    }\n  ];\n}\n\nreturn [\n  {\n    json: {\n      found: true,\n      order\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1613e71d-1b9f-4d27-b63a-62f11fa47387",
+      "name": "Buscar pedido en dataset - Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Buscar pedido en dataset - Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
